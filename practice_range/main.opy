@@ -1,7 +1,7 @@
 settings {
     "main": {
         "modeName": "훈련장+",
-        "description": "Practice Range 2.2 by PMAJellies | WIHS27#3669 버그수정/업데이트"
+        "description": "Practice Range 2.2 by PMAJellies | WIHS27#3669 버그수정/업데이트 v2.7"
     },
     "lobby": {
         "allowPlayersInQueue": true,
@@ -74,7 +74,6 @@ playervar isInBoost 32
 playervar isFlying 33
 playervar infAmmo 34
 playervar infAbill 35
-playervar originAmmo 36
 
 #!include "original.opy"
 #!include "chadol.opy"

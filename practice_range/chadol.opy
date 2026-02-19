@@ -11,7 +11,7 @@ rule "HUD":
     @Team 1
 
     hudSubtext(eventPlayer, "원본: Practice Range 2.2 by PMAJellies (AJERA)", HudPosition.RIGHT, -12, Color.GREEN, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
-    hudSubtext(eventPlayer, "WIHS27#3669 업데이트 v2.6 (7N5FA)", HudPosition.RIGHT, -11, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
+    hudSubtext(eventPlayer, "WIHS27#3669 업데이트 v2.7 (7N5FA)", HudPosition.RIGHT, -11, Color.BLUE, HudReeval.VISIBILITY, SpecVisibility.ALWAYS)
 
     hudSubtext(eventPlayer, " {0} + {1} : 이속 증가, 무적".format(buttonString(Button.INTERACT), buttonString(Button.MELEE)), HudPosition.RIGHT, -3, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
     hudSubtext(eventPlayer, " {0} + {1} : 메뉴 열기".format(buttonString(Button.CROUCH), buttonString(Button.MELEE)), HudPosition.RIGHT, -1, Color.WHITE, HudReeval.VISIBILITY_AND_STRING, SpecVisibility.ALWAYS)
@@ -38,11 +38,10 @@ rule "초기화":
 
     eventPlayer.infUlt = false
     eventPlayer.infAmmo = false
-    eventPlayer.originAmmo = 10
     eventPlayer.infAbill = false
     eventPlayer.damageBoost = false
     eventPlayer.isFlying = false
-    
+
     eventPlayer.boostTime = 0
 
 
@@ -226,12 +225,17 @@ rule "무한탄창":
     @Team 1
     @Condition eventPlayer.isDummy() == false
     @Condition eventPlayer.infAmmo == true
-    @Condition eventPlayer.getAmmo(0) > 0
-    @Condition eventPlayer.getAmmo(0) < 100
 
-    eventPlayer.setAmmo(0, 999)
-    if eventPlayer.getMaxAmmo(0) < 999:
-        eventPlayer.setMaxAmmo(0, 999)
+    if eventPlayer.getMaxAmmo(0) > 0:
+        if eventPlayer.getAmmo(0) > 0 and eventPlayer.getAmmo(0) < 100:
+            eventPlayer.setAmmo(0, 999)
+    else:
+        eventPlayer.setAmmo(0, 999)
+    if eventPlayer.getMaxAmmo(1) > 0:
+        if eventPlayer.getAmmo(1) > 0 and eventPlayer.getAmmo(1) < 100:
+            eventPlayer.setAmmo(1, 999)
+    else:
+        eventPlayer.setAmmo(1, 999)
     wait(1)
     if RULE_CONDITION:
         goto RULE_START
@@ -240,13 +244,12 @@ rule "무한탄창":
 def menu_infammo():
     if eventPlayer.infAmmo:
         eventPlayer.infAmmo = false
-        eventPlayer.setMaxAmmo(0, eventPlayer.originAmmo)
         eventPlayer.setAmmo(0, 0)
+        eventPlayer.setAmmo(1, 0)
         bigMessage(eventPlayer, "무한탄창: 꺼짐")
         bad_sound()
     else:
         eventPlayer.infAmmo = true
-        eventPlayer.originAmmo = eventPlayer.getMaxAmmo(0)
         bigMessage(eventPlayer, "무한탄창: 켜짐")
         good_sound()
 
@@ -261,6 +264,7 @@ rule "무한스킬":
     eventPlayer.setAbilityCooldown(Button.PRIMARY_FIRE, 0)
     eventPlayer.setAbilityCooldown(Button.SECONDARY_FIRE, 0)
     eventPlayer.setAbilityCooldown(Button.JUMP, 0)
+    eventPlayer.setAbilityCooldown(Button.RELOAD, 0)
 
     wait(0.1)
     if RULE_CONDITION:
@@ -294,6 +298,62 @@ rule "무한스킬: 정크랫":
     if RULE_CONDITION:
         goto RULE_START
 
+
+rule "무한스킬: 브리기테":
+    @Event eachPlayer
+    @Team 1
+    @Condition eventPlayer.isDummy() == false
+    @Condition eventPlayer.infAbill == true
+    @Hero brigitte
+
+    eventPlayer.setAbilityCharge(Button.ABILITY_2, 3)
+
+    wait(0.1)
+    if RULE_CONDITION:
+        goto RULE_START
+
+
+rule "무한스킬: 라인하르트":
+    @Event eachPlayer
+    @Team 1
+    @Condition eventPlayer.isDummy() == false
+    @Condition eventPlayer.infAbill == true
+    @Hero reinhardt
+
+    eventPlayer.setAbilityCharge(Button.ABILITY_2, 2)
+
+    wait(0.1)
+    if RULE_CONDITION:
+        goto RULE_START
+
+
+rule "무한스킬: 자리야":
+    @Event eachPlayer
+    @Team 1
+    @Condition eventPlayer.isDummy() == false
+    @Condition eventPlayer.infAbill == true
+    @Hero zarya
+
+    eventPlayer.setAbilityCharge(Button.ABILITY_1, 2)
+    eventPlayer.setAbilityCharge(Button.ABILITY_2, 2)
+
+    wait(0.1)
+    if RULE_CONDITION:
+        goto RULE_START
+
+
+rule "무한스킬: 프레야":
+    @Event eachPlayer
+    @Team 1
+    @Condition eventPlayer.isDummy() == false
+    @Condition eventPlayer.infAbill == true
+    @Hero freja
+
+    eventPlayer.setAbilityCharge(Button.ABILITY_1, 2)
+
+    wait(0.1)
+    if RULE_CONDITION:
+        goto RULE_START
 
 def menu_infabill():
     if eventPlayer.infAbill:
